@@ -92,4 +92,14 @@ same catalogue and the same matching without running a command.
 
 ## State
 
-- 2026-10-17: design written; fuzzy.library next, then updatedb and locate, then fzf.
+- **0.1b1, 2026-10-17:** fuzzy.library 0.1b1 (AmigaLibs/fuzzy), updatedb, locate, fzf, and
+  tui.library 0.4b1 (TuiOpenIO) built and tested in FS-UAE: A1200 test machine (68020, 3.2.1) in a
+  Shell window and in CTerm (typing, keys, double click, a pipe, backquotes, Esc), A600 (68000,
+  2.05). Ranking equal to fzf 0.74's top five on a real A1200's 21,028 paths.
+- **Speed** (21,028 paths, one search): 68000 7 MHz chip-only 14-28 s, 68020 14 MHz + fast 3-6 s.
+  Found on the way: the floor is the 68000 itself (touching 340 KB once in compiled C took 2.9 s on
+  the A600); reading byte by byte through calls doubled it (fixed); a letter fingerprint (32 bits a
+  path, built from each entry's new bytes) skips paths that cannot match.
+- **Next:** the two hot loops in assembler (reading entries; the letter scan in matching); fzf
+  restoring CTerm's tab title (tui.library has no call for it); the wheel in fzf not tried yet;
+  the real A1200 (needs the user's go: it is shared).
