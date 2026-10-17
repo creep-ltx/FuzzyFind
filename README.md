@@ -77,8 +77,7 @@ so only the processor's share): one search of 21,028 paths took 14-28 s on a 7 M
 memory only, and 3-6 s on a 14 MHz 68020 with fast memory. A search reads the whole index, so on a
 real machine reading it from the hard drive, CF card or SD card comes on top, and that depends on
 the drive. Fewer files means faster searches. In `fzf` only the first letter searches the whole
-index; each further letter only re-checks what already matched. Faster hot loops (in assembler)
-are next.
+index; each further letter only re-checks what already matched.
 
 ## Building
 

@@ -103,6 +103,10 @@ same catalogue and the same matching without running a command.
   Found on the way: the floor is the 68000 itself (touching 340 KB once in compiled C took 2.9 s on
   the A600); reading byte by byte through calls doubled it (fixed); a letter fingerprint (32 bits a
   path, built from each entry's new bytes) skips paths that cannot match.
-- **Next:** the two hot loops in assembler (reading entries; the letter scan in matching); fzf
-  restoring CTerm's tab title (tui.library has no call for it); the wheel in fzf not tried yet;
-  the real A1200 (needs the user's go: it is shared).
+- **Done 2026-10-17:** the hot loops in assembler (no measurable gain on the emulated 68000: the
+  cost is spread over many steps per entry; see fuzzy.library's README), CTerm's tab title given
+  back when fzf ends (tui.library 0.4: TuiClose clears it), the wheel in fzf (3 lines a notch, both
+  ways, seen in CTerm).
+- **Next:** for a real gain on a 68000, a different index layout (proposed: not started); the real
+  A1200 (needs the user's go: it is shared); real-machine speed figures (see the user's rule: none
+  from the emulator in the docs).
