@@ -258,23 +258,109 @@ static LONG rowof(LONG n)
     return reverse ? 2 + n : t->Rows - 3 - n;
 }
 
+/* ---- UTF-8 lines (a list from a share or a UTF-8 file) ---------------- */
+
+/* the character at s[i] (n bytes left), *k its length: UTF-8, or one
+ * Latin-1 byte */
+static ULONG dec8(const UBYTE *s, LONG n, LONG *k)
+{
+    ULONG c = s[0];
+    *k = 1;
+    if (c >= 0xC2 && c <= 0xF4) {
+        LONG need = c < 0xE0 ? 1 : c < 0xF0 ? 2 : 3, j;
+        ULONG v = c & (need == 1 ? 0x1F : need == 2 ? 0x0F : 0x07);
+        for (j = 1; j <= need && j < n && (s[j] & 0xC0) == 0x80; j++) v = v << 6 | (s[j] & 0x3F);
+        if (j > need) {
+            *k = need + 1;
+            return v;
+        }
+    }
+    return c;
+}
+
+/* is the line UTF-8 with something beyond ASCII? */
+static int isu8(const UBYTE *s, LONG n)
+{
+    LONG i = 0, k;
+    int high = 0;
+    while (i < n) {
+        if (s[i] < 0x80) {
+            i++;
+            continue;
+        }
+        dec8(s + i, n - i, &k);
+        if (k == 1) return 0;
+        high = 1;
+        i += k;
+    }
+    return high;
+}
+
+/* the columns a character takes (tui.library 0.5's widths; 1 before) */
+static LONG cw(ULONG c)
+{
+    LONG w;
+    if (c < 0x300) return 1;
+    if (TuiBase->lib_Version == 0 && TuiBase->lib_Revision < 5) return 1;
+    w = TuiCharWidth(c);
+    return w < 0 ? 1 : w;
+}
+
+/* the columns of s[a..b) */
+static LONG cols8(const UBYTE *s, LONG a, LONG b)
+{
+    LONG x = 0, k;
+    while (a < b) {
+        x += cw(dec8(s + a, b - a, &k));
+        a += k;
+    }
+    return x;
+}
+
 static void drawline(LONG row, LONG k, int iscur)
 {
     UWORD pos[64];
     LONG np = 0, i, w = t->Cols - 2, len = items[k].len, from = 0;
     const char *s = items[k].s;
+    const UBYTE *u = (const UBYTE *)s;
+    int u8 = isu8(u, len);
     /* the chosen line: a grey bar in CTerm; reversed in a plain console,
      * whose few pens would make a grey bar black under black text */
     LONG bg = iscur && t->CTerm ? C_CURBG : TC_DEFAULT;
     LONG at = iscur ? (t->CTerm ? TA_BOLD : TA_REV) : 0;
     TuiFill(t, 0, row, t->Cols, ' ', C_TEXT, bg, iscur && !t->CTerm ? TA_REV : 0);
     if (iscur) TuiPutC(t, 0, row, '>', C_MARK, bg, TA_BOLD | (at & TA_REV));
-    if (len > w) from = len - w + 2;        /* too long: the end, where the name is */
     if (qlen) {
         memset(pos, 0xFF, sizeof(pos));
         FuzzyScore(pat, (CONST_STRPTR)s, len, pos, 64);
         np = 64;
     }
+    if (u8) {
+        /* UTF-8: cut by columns (wide characters take two), and the
+         * matched bytes found by their column */
+        LONG x0 = 2, kk;
+        if (cols8(u, 0, len) > w) {
+            LONG need = w - 2;
+            from = len;
+            while (from > 0) {          /* back to where the end fits */
+                LONG p = from - 1;
+                while (p > 0 && (u[p] & 0xC0) == 0x80) p--;
+                if (cols8(u, p, len) > need) break;
+                from = p;
+            }
+            TuiPut(t, 2, row, "..", 2, C_INFO, bg, at);
+            x0 = 4;
+        }
+        TuiPutUTF8(t, x0, row, (CONST_STRPTR)(s + from), len - from, C_TEXT, bg, at);
+        for (i = 0; i < np; i++) {
+            LONG p = pos[i];
+            if (p == 0xFFFF || p < from || p >= len || (u[p] & 0xC0) == 0x80) continue;
+            TuiPutC(t, x0 + cols8(u, from, p), row, dec8(u + p, len - p, &kk), C_MATCH, bg,
+                    TA_BOLD | (at & TA_REV));
+        }
+        return;
+    }
+    if (len > w) from = len - w + 2;        /* too long: the end, where the name is */
     if (from) {
         TuiPut(t, 2, row, "..", 2, C_INFO, bg, at);
         TuiPut(t, 4, row, s + from + 2, len - from - 2, C_TEXT, bg, at);
