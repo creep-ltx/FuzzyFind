@@ -26,8 +26,9 @@ same catalogue and the same matching without running a command.
 - **Old disks:** matching never touches the disk; the index does. On FFS each file's header is a
   block of its own, so a full scan of an old drive is thousands of seeks (how long on a real
   mechanical drive or CF card: not measured). On the user's A1200 (PiStorm, SD card) listing all
-  21,028 paths of its four local volumes took ~11 s through Wasabi (measured 2026-10-17, maybe
-  helped by cached directory blocks).
+  21,028 paths of its four local volumes took ~11 s through Wasabi (2026-10-17) - but `List ALL`
+  had stopped early on Dump: ("object not found", rc 20, unnoticed): the disks hold 57,028 entries,
+  as updatedb found later. The 21,028-path list stayed the test list for ranking and timing.
 - **More than search:** with size, date and type the index is a catalogue: "what changed since
   last night" (compare two indexes), disk usage at a glance, duplicates, every `.mod` for a player,
   a launcher (type "dpai", Deluxe Paint starts; the Sprawl idea), and Claude asking "where is X on
@@ -107,6 +108,10 @@ same catalogue and the same matching without running a command.
   cost is spread over many steps per entry; see fuzzy.library's README), CTerm's tab title given
   back when fzf ends (tui.library 0.4: TuiClose clears it), the wheel in fzf (3 lines a notch, both
   ways, seen in CTerm).
+- **On the real A1200, 2026-10-17** (the user's go; other sessions told): tui.library 0.4b1 (0.3b1
+  kept as LIBS:tui.library-0.3b1.bak), fuzzy.library 0.1b1, C:updatedb/locate/fzf. updatedb: 57,028
+  entries, 5.3 s, 1,090,137-byte index; a search 0.14-0.30 s (Emu68 + SD card: not typical); fzf in
+  CTerm: typing, Esc, the title given back.
 - **Next:** for a real gain on a 68000, a different index layout (proposed: not started); the real
   A1200 (needs the user's go: it is shared); real-machine speed figures (see the user's rule: none
   from the emulator in the docs).

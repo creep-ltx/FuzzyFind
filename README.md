@@ -18,7 +18,7 @@ Three commands, for AmigaOS 2.04 and up, any 680x0:
 - Indexes every real disk by itself; network shares (NFS, SMB) and RAM: are left out. Or name the
   volumes, or set them once in `ENV:FuzzyFind/Volumes`.
 - Keeps each file's size, date, type and protection bits: a catalogue, not just names.
-- Small: a real A1200's 21,028 paths take 340 KB.
+- Small: a real A1200's 57,028 files and drawers took a 1.04 MB index.
 - Safe: the new index replaces the old one only when it is complete; Ctrl-C keeps the old one.
 - Low priority if you like (`PRI=-5`), quiet for the Startup-Sequence (`QUIET`).
 
@@ -72,8 +72,12 @@ Run >NIL: updatedb QUIET PRI=-5
 
 ## Speed
 
-**Not measured on a real Amiga yet.** What was measured (FS-UAE, 2026-10-17, the index in RAM:,
-so only the processor's share): one search of 21,028 paths took 14-28 s on a 7 MHz 68000 with chip
+On a real A1200 with a PiStorm (Emu68, which runs as a fast 68040; the files on an SD card, so
+not typical of an Amiga), measured 2026-10-17: `updatedb` indexed 57,028 files and drawers in
+5.3 s, reading the index took 0.14 s, and one search 0.14-0.30 s.
+
+**Not measured on a stock Amiga yet.** In FS-UAE (2026-10-17, the index in RAM:, so only the
+processor's share): one search of a 21,028-path test list took 14-28 s on a 7 MHz 68000 with chip
 memory only, and 3-6 s on a 14 MHz 68020 with fast memory. A search reads the whole index, so on a
 real machine reading it from the hard drive, CF card or SD card comes on top, and that depends on
 the drive. Fewer files means faster searches. In `fzf` only the first letter searches the whole
@@ -86,9 +90,11 @@ index; each further letter only re-checks what already matched.
 
 ## State
 
-**0.1b1, 2026-10-17.** Tested in FS-UAE on the A1200 test machine (68020, OS 3.2.1) and the A600
+**0.1b1, 2026-10-17.** On the real A1200 (PiStorm, Emu68, OS 3.2.3): updatedb over its four disks
+(57,028 entries, network shares left out), locate, and fzf in CTerm (typing, Esc, the tab title
+given back). In FS-UAE on the A1200 test machine (68020, OS 3.2.1) and the A600
 (68000, Workbench 2.05): `updatedb` on their disks, every `locate` mode, `fzf` typing, moving,
-picking, from a pipe and in backquotes, Esc. Not yet on the real A1200.
+picking, from a pipe and in backquotes, Esc..
 
 ## License
 
