@@ -26,7 +26,8 @@ Builds the index: every file and drawer, with its size, date, type and protectio
   can be huge, slow or gone.
 - **Soft links** are listed but never followed (they can loop).
 - **Ctrl-C** stops it; the old index stays as it was. Return code 5.
-- **It prints** each volume and its entries, then the total and the time:
+- **It prints** each volume and its entries, then the total and the time it took, for example
+  (on an emulated A1200, so the time says nothing about a real disk):
 
 ```
 Workbench: 1575

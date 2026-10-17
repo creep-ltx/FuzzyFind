@@ -1,6 +1,6 @@
 # FuzzyFind
 
-**Find anything on your Amiga, instantly.** FuzzyFind keeps a catalogue of every file and drawer
+**Find anything on your Amiga by typing a few letters.** FuzzyFind keeps a catalogue of every file and drawer
 on your disks and lets you search it the way fzf does on Linux: type a few letters, `mltvw`, and
 `Workbench:Utilities/MultiView` is on top.
 
@@ -11,9 +11,6 @@ Three commands, for AmigaOS 2.04 and up, any 680x0:
 | **`updatedb`** | builds the catalogue (the index) of your disks; run it at boot or at night |
 | **`locate`** | prints the paths that match, for scripts and pipes |
 | **`fzf`** | the interactive finder: type and the list narrows, Enter picks |
-
-Nothing like it existed for the Amiga (checked on Aminet, 2026-10-16): no fuzzy finder at all, and
-only old `locate`s that are not fuzzy.
 
 ## Features
 
@@ -75,11 +72,13 @@ Run >NIL: updatedb QUIET PRI=-5
 
 ## Speed
 
-Searching a real A1200's 21,028 paths (measured in FS-UAE, 2026-10-17): a 7 MHz 68000 with chip
-memory only takes 14-28 s for one search, a 14 MHz 68020 with fast memory 3-6 s, a PiStorm (Emu68)
-a fraction of a second. In `fzf` only the first letter is slow: each further letter narrows what
-it already found. Scanning the disk instead takes minutes on an old drive. Faster hot loops (in
-assembler) are next.
+**Not measured on a real Amiga yet.** What was measured (FS-UAE, 2026-10-17, the index in RAM:,
+so only the processor's share): one search of 21,028 paths took 14-28 s on a 7 MHz 68000 with chip
+memory only, and 3-6 s on a 14 MHz 68020 with fast memory. A search reads the whole index, so on a
+real machine reading it from the hard drive, CF card or SD card comes on top, and that depends on
+the drive. Fewer files means faster searches. In `fzf` only the first letter searches the whole
+index; each further letter only re-checks what already matched. Faster hot loops (in assembler)
+are next.
 
 ## Building
 

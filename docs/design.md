@@ -5,7 +5,7 @@
 
 ## Start here
 
-FuzzyFind finds anything on the Amiga instantly: a catalogue (the **index**) of every file and
+FuzzyFind finds anything on the Amiga by a few letters: a catalogue (the **index**) of every file and
 drawer on the local disks, built by `updatedb`; `locate` searches it; `fzf` is the interactive
 finder for the terminal (type and the list narrows, best match on top). The matching and the
 index are in **fuzzy.library** (AmigaLibs/fuzzy), so Ahiru, csh, Sumi or a launcher can use the
@@ -24,10 +24,10 @@ same catalogue and the same matching without running a command.
   fdb 1.4 from 1989-92, dblocate): none fuzzy, none with UTF-8 or long paths, none in the
   background, none a library others can read.
 - **Old disks:** matching never touches the disk; the index does. On FFS each file's header is a
-  block of its own, so a full scan of an old drive is thousands of seeks (minutes). Searching the
-  index is instant there. On the user's A1200 (PiStorm, SD card) listing all 21,028 paths of its
-  four local volumes took ~11 s through Wasabi (measured 2026-10-17, maybe helped by cached
-  directory blocks).
+  block of its own, so a full scan of an old drive is thousands of seeks (how long on a real
+  mechanical drive or CF card: not measured). On the user's A1200 (PiStorm, SD card) listing all
+  21,028 paths of its four local volumes took ~11 s through Wasabi (measured 2026-10-17, maybe
+  helped by cached directory blocks).
 - **More than search:** with size, date and type the index is a catalogue: "what changed since
   last night" (compare two indexes), disk usage at a glance, duplicates, every `.mod` for a player,
   a launcher (type "dpai", Deluxe Paint starts; the Sprawl idea), and Claude asking "where is X on
@@ -96,7 +96,10 @@ same catalogue and the same matching without running a command.
   tui.library 0.4b1 (TuiOpenIO) built and tested in FS-UAE: A1200 test machine (68020, 3.2.1) in a
   Shell window and in CTerm (typing, keys, double click, a pipe, backquotes, Esc), A600 (68000,
   2.05). Ranking equal to fzf 0.74's top five on a real A1200's 21,028 paths.
-- **Speed** (21,028 paths, one search): 68000 7 MHz chip-only 14-28 s, 68020 14 MHz + fast 3-6 s.
+- **Speed** (21,028 paths, one search; FS-UAE, the index in RAM:, so the processor's share only,
+  not a real drive): 68000 7 MHz chip-only 14-28 s, 68020 14 MHz + fast 3-6 s. The user, 2026-10-17:
+  the emulator's PC has an NVMe drive; most Amigas have mechanical drives or CF cards, so no speed
+  claim without a real-machine measurement.
   Found on the way: the floor is the 68000 itself (touching 340 KB once in compiled C took 2.9 s on
   the A600); reading byte by byte through calls doubled it (fixed); a letter fingerprint (32 bits a
   path, built from each entry's new bytes) skips paths that cannot match.
