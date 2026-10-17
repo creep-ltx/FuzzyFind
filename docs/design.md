@@ -112,6 +112,6 @@ same catalogue and the same matching without running a command.
   kept as LIBS:tui.library-0.3b1.bak), fuzzy.library 0.1b1, C:updatedb/locate/fzf. updatedb: 57,028
   entries, 5.3 s, 1,090,137-byte index; a search 0.14-0.30 s (Emu68 + SD card: not typical); fzf in
   CTerm: typing, Esc, the title given back.
-- **Next:** for a real gain on a 68000, a different index layout (proposed: not started); the real
-  A1200 (needs the user's go: it is shared); real-machine speed figures (see the user's rule: none
-  from the emulator in the docs).
+- **Next:** for a real gain on a 68000, a different index layout (proposed: not started);
+  speed figures from a stock Amiga with a mechanical drive or a CF card (the user's rule: none from
+  the emulator in the docs; the A1200's PiStorm and SD card are not typical).
